@@ -1,5 +1,7 @@
 package com.trading.lob;
 
+import java.util.Optional;
+
 public class OrderBookApplication {
 
     public static void main(String[] args) {
@@ -23,13 +25,26 @@ public class OrderBookApplication {
         System.out.println("Priority \t Id \t Qty \t Price \t Side");
 
 //        orderBook.removeOrder(bid1);
-        orderBook.modifyOrderBook(48, bid1);
+        Optional<Order> modifiedOrder = orderBook.modifyOrderBook(48, bid1);
+        if(modifiedOrder.isPresent()) {
+            orderBook.addOrder(modifiedOrder.get());
+        } else  {
+            System.out.println("Could not modify order with id " + bid1.getId());
+        }
+
         orderBook.getAllBiddingOrders().forEach(order -> {
             order.getValue().getOrders().forEach(o -> {
                 System.out.println(order.getKey() + "\t\t\t" + o.getId() + "\t\t" + o.getQuantity() + "\t\t" + o.getPrice() + "\t\t" + o.getOrderSide());
             });
         });
         System.out.println("================================================");
+
+        Optional<Order> modifiedSellOrder = orderBook.modifyOrderBook(55, sell2);
+        if(modifiedSellOrder.isPresent()) {
+            orderBook.addOrder(modifiedSellOrder.get());
+        } else  {
+            System.out.println("Could not modify order with id " + sell2.getId());
+        }
         orderBook.getAllSellingOrders().forEach(order -> {
             order.getValue().getOrders().forEach(o -> {
                 System.out.println(order.getKey() + "\t\t\t" + o.getId() + "\t\t" + o.getQuantity() + "\t\t" + o.getPrice() + "\t\t" + o.getOrderSide());

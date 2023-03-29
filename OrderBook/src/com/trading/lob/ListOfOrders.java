@@ -18,7 +18,7 @@ public class ListOfOrders {
         this.orders.add(order);
     }
 
-    public void modifyOrder(int id, int quantity) {
+    public Order modifyOrder(int id, int quantity) {
         Order modifiedOrder = new Order();
         this.orders.forEach(order -> {
             if(order.getId() == id)  {
@@ -31,7 +31,7 @@ public class ListOfOrders {
 
         this.orders.removeIf(order -> order.getId() == id);
 
-        this.orders.addLast(modifiedOrder);
+        return modifiedOrder;
     }
 
     public void removeOrder(int id) {

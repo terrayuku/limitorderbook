@@ -1,9 +1,6 @@
 package com.trading.lob;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 public class OrderBook {
     private TreeMap<Integer, ListOfOrders> buyOrders;
@@ -45,21 +42,24 @@ public class OrderBook {
             sharesTable.forEach((key, value) -> value.removeOrder(id));
     }
 
-    public void modifyOrderBook(int quantity, Order order) {
+    public Optional<Order> modifyOrderBook(int quantity, Order order) {
         if(order.getOrderSide() == Side.BUY) {
-            modifyOrderBookFromTable(order.getId(), quantity, buyOrders);
+            return modifyOrderBookFromTable(order.getId(), quantity, buyOrders);
         } else if (order.getOrderSide() == Side.SELL) {
-            modifyOrderBookFromTable(order.getId(), quantity, sellOrders);
+            return modifyOrderBookFromTable(order.getId(), quantity, sellOrders);
         }
+        return null;
     }
 
-    public void modifyOrderBookFromTable(int id, int quanity, TreeMap<Integer, ListOfOrders> sharesTable) {
-//        Order modifiedOrder  = new Order();
-        sharesTable.forEach((key, value) -> {
-            value.modifyOrder(id, quanity);
-        });
+    public Optional<Order> modifyOrderBookFromTable(int id, int quanity, TreeMap<Integer, ListOfOrders> sharesTable) {
+        Order modifiedOrder  = null;
+        for (Map.Entry<Integer, ListOfOrders> entry : sharesTable.entrySet()) {
+            Integer key = entry.getKey();
+            ListOfOrders value = entry.getValue();
+            modifiedOrder = value.modifyOrder(id, quanity);
+        }
 
-//        return modifiedOrder;
+        return Optional.of(modifiedOrder);
     }
 
     public ListOfOrders getBiddingOrderById(int id)  {
