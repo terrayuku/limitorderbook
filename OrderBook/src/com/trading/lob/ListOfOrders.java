@@ -1,7 +1,6 @@
 package com.trading.lob;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class ListOfOrders {
 

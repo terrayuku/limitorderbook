@@ -3,8 +3,8 @@ package com.trading.lob;
 import java.util.*;
 
 public class OrderBook {
-    private TreeMap<Integer, ListOfOrders> buyOrders;
-    private TreeMap<Integer, ListOfOrders> sellOrders;
+    private final TreeMap<Integer, ListOfOrders> buyOrders;
+    private final TreeMap<Integer, ListOfOrders> sellOrders;
 
     public OrderBook() {
         this.buyOrders = new TreeMap<>();
@@ -48,22 +48,22 @@ public class OrderBook {
         } else if (order.getOrderSide() == Side.SELL) {
             return modifyOrderBookFromTable(order.getId(), quantity, sellOrders);
         }
-        return null;
+        return Optional.empty();
     }
 
     public Optional<Order> modifyOrderBookFromTable(int id, int quanity, TreeMap<Integer, ListOfOrders> sharesTable) {
         Order modifiedOrder  = null;
         for (Map.Entry<Integer, ListOfOrders> entry : sharesTable.entrySet()) {
-            Integer key = entry.getKey();
             ListOfOrders value = entry.getValue();
             modifiedOrder = value.modifyOrder(id, quanity);
         }
 
+        assert modifiedOrder != null;
         return Optional.of(modifiedOrder);
     }
 
-    public ListOfOrders getBiddingOrderById(int id)  {
-        return this.buyOrders.get(id);
+    public ListOfOrders getBiddingOrderById(int priority)  {
+        return this.buyOrders.get(priority);
     }
 
     public ListOfOrders getSellingOrderById(int id)  {
