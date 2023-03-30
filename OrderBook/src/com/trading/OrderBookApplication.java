@@ -20,22 +20,22 @@ public class OrderBookApplication {
         Order sell2 = new Order(11, 40, Side.SELL);
         Order sell3 = new Order(12, 20, Side.SELL);
 
-        orderBook.addOrder(bid1);
-        orderBook.addOrder(bid2);
         orderBook.addOrder(bid3);
+        orderBook.addOrder(bid2);
+        orderBook.addOrder(bid1);
 
         orderBook.addOrder(sell1);
         orderBook.addOrder(sell2);
         orderBook.addOrder(sell3);
 
         // removing order
-        orderBook.removeOrder(bid3);
+//        orderBook.removeOrder(bid3);
 
         // modify order
-        modifyOrder(48, bid1);
+//        modifyOrder(48, bid1);
 
         // adding order
-        orderBook.addOrder(bid4);
+//        orderBook.addOrder(bid4);
 
         System.out.println("Priority \t Id \t Qty \t Price");
 

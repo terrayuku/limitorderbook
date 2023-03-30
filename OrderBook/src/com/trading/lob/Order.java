@@ -6,13 +6,13 @@ public class Order {
     private int id = 0;
 
     private int quantity;
-    private double price;
+    private int price;
     private Side orderSide;
 
     public Order() {
     }
 
-    public Order(double price, int quantity, Side orderSide) {
+    public Order(int price, int quantity, Side orderSide) {
         this.price = price;
         this.quantity = quantity;
         this.orderSide = orderSide;
@@ -26,11 +26,11 @@ public class Order {
         this.id = id;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

@@ -7,7 +7,7 @@ public class OrderBook {
     private final TreeMap<Integer, ListOfOrders> sellOrders;
 
     public OrderBook() {
-        this.buyOrders = new TreeMap<>();
+        this.buyOrders = new TreeMap<>(new PriceSorting());
         this.sellOrders = new TreeMap<>();
     }
 
@@ -32,13 +32,13 @@ public class OrderBook {
 
     public void removeOrder(Order order) {
         if(order.getOrderSide() == Side.BUY) {
-            removeOrderFromTable(order.getId(), order, buyOrders);
+            removeOrderFromTable(order.getId(), buyOrders);
         } else if (order.getOrderSide() == Side.SELL) {
-            removeOrderFromTable(order.getId(), order, sellOrders);
+            removeOrderFromTable(order.getId(), sellOrders);
         }
     }
 
-    public void removeOrderFromTable(int id, Order order, TreeMap<Integer, ListOfOrders> sharesTable) {
+    public void removeOrderFromTable(int id, TreeMap<Integer, ListOfOrders> sharesTable) {
             sharesTable.forEach((key, value) -> value.removeOrder(id));
     }
 
