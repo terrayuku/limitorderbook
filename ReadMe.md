@@ -2,7 +2,7 @@
 
 ## Class Diagram
 
-![Class Diagram](orderbook.png)
+![Class Diagram](orderbook.PNG)
 
 ### Data stuctures used (may change upon further studying and improvements)
 1. Linked Lists (FIFO)
