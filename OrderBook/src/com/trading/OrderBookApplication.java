@@ -3,6 +3,7 @@ import com.trading.lob.Order;
 import com.trading.lob.OrderBook;
 import com.trading.lob.Side;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class OrderBookApplication {
@@ -11,64 +12,105 @@ public class OrderBookApplication {
     static OrderBook orderBooks = null;
     public static void main(String[] args) {
         orderBook = new OrderBook();
-        Order bid1 = new Order(9, 40, Side.BUY);
-        Order bid2 = new Order(8, 30, Side.BUY);
-        Order bid3 = new Order( 7, 50, Side.BUY);
-        Order bid4 = new Order( 3, 10, Side.BUY);
+        System.out.println("Id \t Qty \t Price");
 
-        Order sell1 = new Order(10, 5, Side.SELL);
-        Order sell2 = new Order(11, 40, Side.SELL);
-        Order sell3 = new Order(12, 20, Side.SELL);
+        addBuyers();
+        System.out.println("=============Buying Orders==============");
+        printBuyingOrders();
 
-        orderBook.addOrder(bid3);
-        orderBook.addOrder(bid2);
-        orderBook.addOrder(bid1);
+        System.out.println("=============Sellers Orders============");
+//
+//        modifyOrder(55, sell2);
 
-        orderBook.addOrder(sell1);
-        orderBook.addOrder(sell2);
-        orderBook.addOrder(sell3);
+        addSellers();
+//
+        printSellingOrders();
 
-        // removing order
-//        orderBook.removeOrder(bid3);
+        Order newBid = new Order.Builder(Side.BUY)
+                .atPrice(10)
+                .withQuantity(20).build();
 
-        // modify order
-//        modifyOrder(48, bid1);
+        orderBook.process(newBid);
+        System.out.println("=======Buying Order and Matching===========");
 
-        // adding order
-//        orderBook.addOrder(bid4);
+        printSellingOrders();
 
-        System.out.println("Priority \t Id \t Qty \t Price");
+        Order newSell = new Order.Builder(Side.SELL)
+                .atPrice(15)
+                .withQuantity(20).build();
+
+        orderBook.process(newSell);
+        System.out.println("=======Selling Order and Matching===========");
 
         printBuyingOrders();
 
-        System.out.println("====================================");
 
-        modifyOrder(55, sell2);
+        Order newOrder = new Order.Builder(Side.BUY).atPrice(6).withQuantity(100).build();
+        Optional<Order> modifiedOrder = orderBook.modifyOrderBook(0, newOrder);
+        modifiedOrder.ifPresent(order -> orderBook.process(order));
 
-        printSellingOrders();
+
+//    }
+//
+//    private static void modifyOrder(int quantity, Order order) {
+//        Optional<Order> modifiedOrder = orderBook.modifyOrderBook(quantity, order);
+//        if(modifiedOrder.isPresent()) {
+//            orderBook.addOrder(modifiedOrder.get());
+//        } else  {
+//            System.out.println("Could not modify buying order with id " + order.getId());
+//        }
     }
 
-    private static void modifyOrder(int quantity, Order order) {
-        Optional<Order> modifiedOrder = orderBook.modifyOrderBook(quantity, order);
-        if(modifiedOrder.isPresent()) {
-            orderBook.addOrder(modifiedOrder.get());
-        } else  {
-            System.out.println("Could not modify buying order with id " + order.getId());
-        }
+    private static void addBuyers() {
+        ArrayList<Order> buyers = new ArrayList<>();
+        Order bid1 = new Order.Builder(Side.BUY)
+                .atPrice(20)
+                .withQuantity(55).build();
+        buyers.add(bid1);
+
+        Order bid2 = new Order.Builder(Side.BUY)
+                .atPrice(8)
+                .withQuantity(30).build();
+        buyers.add(bid2);
+
+        Order bid3 = new Order.Builder(Side.BUY)
+                .atPrice(6)
+                .withQuantity(50).build();
+        buyers.add(bid3);
+
+        orderBook.setBuyOrders(buyers);
+
     }
 
+    private static void addSellers() {
+        ArrayList<Order> sellers = new ArrayList<>();
+        Order sell1 = new Order.Builder(Side.SELL)
+                .atPrice(3)
+                .withQuantity(70).build();
+        sellers.add(sell1);
+
+        Order sell2 = new Order.Builder(Side.SELL)
+                .atPrice(8)
+                .withQuantity(10).build();
+        sellers.add(sell2);
+
+        Order sell3 = new Order.Builder(Side.SELL)
+                .atPrice(6)
+                .withQuantity(30).build();
+        sellers.add(sell3);
+
+        orderBook.setSellOrders(sellers);
+
+    }
     private static void printBuyingOrders() {
         orderBook.getAllBiddingOrders().forEach(order ->
-                order.getValue().getOrders().forEach(o ->
-                        System.out.println(order.getKey() + "\t\t\t" + o.getId() + "\t\t" + o.getQuantity() + "\t\t" +
-                                o.getPrice())));
+                System.out.println(order.getId() + "\t" + order.getQuantity() + "\t" +
+                        order.getPrice()));
 
     }
-
     private static void printSellingOrders() {
         orderBook.getAllSellingOrders().forEach(order ->
-                order.getValue().getOrders().forEach(o ->
-                        System.out.println(order.getKey() + "\t\t\t" + o.getId() + "\t\t" + o.getQuantity() + "\t\t" +
-                                o.getPrice())));
+                System.out.println(order.getId() + "\t" + order.getQuantity() + "\t" +
+                        order.getPrice()));
     }
 }

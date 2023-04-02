@@ -1,25 +1,15 @@
 @startuml
 
 class OrderBook {
- TreeMap<Integer, ListOfOrders> buyOrders
- TreeMap<Integer, ListOfOrders> sellOrders
+ List<Order> buyOrders
+ List<Order> sellOrders
 
  OrderBook()
  void addOrder(Order order)
  void removeOrder(Order order)
  Optional<Order> modifyOrderBook(int quantity, Order order)
- Set<Map.Entry<Integer, ListOfOrders>> getAllBiddingOrders()
- Set<Map.Entry<Integer, ListOfOrders>> getAllSellingOrders()
-}
-
-class ListOfOrders {
-    int id
-    LinkedList<Order> orders
-
-    void addOrder(Order order)
-    void modifyOrder(int id, int quantity)
-    void removeOrder(int id)
-    LinkedList<Order> getOrders()
+ List<Order> getAllBiddingOrders()
+ List<Order> getAllSellingOrders()
 }
 
 class Order {
@@ -31,8 +21,7 @@ enum Side {
     BUY, SELL
 }
 
-OrderBook o-- ListOfOrders
-ListOfOrders o-- Order
+OrderBook o--  Order
 Order *-- Side
 
 @enduml

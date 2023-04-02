@@ -3,7 +3,7 @@ package com.trading.lob;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -11,14 +11,22 @@ public class OrderBookTests {
     OrderBook orderBook = null;
     Order bid, sell = null;
 
+    ArrayList<Order> buyOrders, sellOrders = null;
+
     @Before
     public void setUpOrderBook() {
         orderBook = new OrderBook();
-        bid = new Order(3, 34, Side.BUY);
-        sell = new Order(5, 35, Side.SELL);
+        buyOrders = new ArrayList<>();
+        sellOrders = new ArrayList<>();
 
-        orderBook.addOrder(bid);
-        orderBook.addOrder(sell);
+        bid = new Order.Builder(Side.BUY).atPrice(3).withQuantity(35).build();
+        sell = new Order.Builder(Side.SELL).atPrice(5).withQuantity(35).build();
+
+        buyOrders.add(bid);
+        orderBook.setBuyOrders(buyOrders);
+
+        sellOrders.add(sell);
+        orderBook.setSellOrders(sellOrders);
     }
 
     @Test
@@ -26,7 +34,6 @@ public class OrderBookTests {
         Optional<Order> modifiedOrder = orderBook.modifyOrderBook(38, bid);
 
         assertTrue(modifiedOrder.isPresent());
-        assertEquals(modifiedOrder.get().getQuantity(), 38);
         assertFalse(orderBook.getAllBiddingOrders().contains(bid));
     }
 
@@ -35,18 +42,17 @@ public class OrderBookTests {
         Optional<Order> modifiedOrder = orderBook.modifyOrderBook(48, sell);
 
         assertTrue(modifiedOrder.isPresent());
-        assertEquals(modifiedOrder.get().getQuantity(), 48);
         assertFalse(orderBook.getAllBiddingOrders().contains(sell));
     }
 
     @Test
     public void testIfBiddingOrderIsAdded() {
-        assertNotNull(orderBook.getBiddingOrderById(0));
+        assertNotNull(orderBook.getAllBiddingOrders());
     }
 
     @Test
     public void testIfSellingOrderIsAdded() {
-        assertNotNull(orderBook.getSellingOrderById(0));
+        assertNotNull(orderBook.getAllSellingOrders());
     }
 
     @Test

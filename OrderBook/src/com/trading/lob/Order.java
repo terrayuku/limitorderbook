@@ -1,74 +1,109 @@
 package com.trading.lob;
 
-import java.util.Objects;
+import java.util.Date;
+import java.util.Optional;
 
-public class Order {
-    private int id = 0;
+public class Order implements Comparable<Order> {
+    private double quantity;
 
-    private int quantity;
-    private int price;
-    private Side orderSide;
+    private double price;
 
-    public Order() {
+    private int id = -1;
+
+    private Side side;
+
+    private final Date dateTimeOfOrder;
+
+    public static class Builder {
+
+        private double quantity;
+
+        private double price;
+
+        private final Side side;
+
+        private Date dateTimeOfOrder;
+
+        public Builder(final Side pSide) {
+            this.side = pSide;
+        }
+
+        public Builder withQuantity(final double amt) {
+            this.quantity = amt;
+            return this;
+        }
+
+        public Builder atPrice(final double pPrice) {
+            this.price = pPrice;
+            return this;
+        }
+
+        public Order build() {
+            return new Order(this.quantity, this.price, this.side,
+                    Optional.ofNullable(this.dateTimeOfOrder));
+        }
+
     }
 
-    public Order(int price, int quantity, Side orderSide) {
-        this.price = price;
-        this.quantity = quantity;
-        this.orderSide = orderSide;
+    private Order(final double nAmount, final double nPrice,final Side nSide,
+                  final Optional<Date> pDateTimeOfOrder) {
+
+        this.quantity = nAmount;
+        this.price = nPrice;
+        this.id += 1;
+        this.side = nSide;
+        this.dateTimeOfOrder = pDateTimeOfOrder.orElse(new Date());
+    }
+
+    public double getQuantity() {
+        return this.quantity;
+    }
+
+    public void setQuantity(final double pAmount) {
+        this.quantity = pAmount;
+    }
+
+    public double getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(final double pPrice) {
+        this.price = pPrice;
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int pId) {
+        this.id = pId;
     }
 
-    public int getPrice() {
-        return price;
+    public Side getSide() {
+        return this.side;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setSide(Side pSide) {
+        this.side = pSide;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public Side getOrderSide() {
-        return orderSide;
-    }
-
-    public void setOrderSide(Side orderSide) {
-        this.orderSide = orderSide;
+    public Date getDateTimeOfOrder() {
+        return this.dateTimeOfOrder;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return id == order.id;
+    public int compareTo(Order o) {
+
+        if (Double.compare(this.getPrice(), o.getPrice()) == 0) {
+            if (this.getDateTimeOfOrder().before(o.getDateTimeOfOrder())) {
+                return -1;
+            } else {
+                return 1;
+            }
+
+        } else {
+            return Double.compare(this.getPrice(), o.getPrice());
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", price=" + price +
-                ", orderSide=" + orderSide +
-                '}';
-    }
 }
